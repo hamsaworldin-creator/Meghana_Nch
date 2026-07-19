@@ -1,4 +1,6 @@
-
+node_modules/
 dist/
-
+.vite/
+.cache/
+.env
 public/audio/portfolio-theme.mp3
