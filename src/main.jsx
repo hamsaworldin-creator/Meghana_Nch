@@ -581,7 +581,14 @@ function Hero() {
                 });
               }}
             >
-              <source src="/video2.mp4" type="video/mp4" />
+             
+  src={`${import.meta.env.BASE_URL}video2.mp4`}
+  controls
+  autoPlay
+  muted
+  playsInline
+
+              {/* <source src="/video2.mp4" type="video/mp4" /> */}
             </video>
             <span className="hero-frame-shine" aria-hidden="true" />
           </div>
@@ -890,7 +897,7 @@ function Projects() {
 function Research() {
   return (
     <section className="research-section screen-section" id="research">
-      <SectionBackgroundVideo src="/research.mp4" className="research-video-bg" objectPosition="center center" />
+      <SectionBackgroundVideo src={`${import.meta.env.BASE_URL}research.mp4`} className="research-video-bg" objectPosition="center center" />
       <div className="research-content section-content section-inner">
         <SectionHeading icon={Microscope} title="Research Beyond Boundaries" />
         <div className="research-layout">
