@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 900">
+  <defs><radialGradient id="g" cx="70%" cy="35%" r="75%"><stop offset="0" stop-color="#fff9fd"/><stop offset=".48" stop-color="#eef9ff"/><stop offset="1" stop-color="#ffeef6"/></radialGradient><radialGradient id="p" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#fff"/><stop offset=".6" stop-color="#ffd0e3"/><stop offset="1" stop-color="#f5aac4"/></radialGradient></defs>
+  <rect width="1400" height="900" fill="url(#g)"/>
+  <path d="M1390 830C1120 690 980 490 790 250 700 135 610 75 480 35" fill="none" stroke="#8d5b5f" stroke-width="34" stroke-linecap="round" opacity=".26"/>
+  <path d="M1310 650C1090 610 920 520 720 380" fill="none" stroke="#8d5b5f" stroke-width="18" stroke-linecap="round" opacity=".22"/>
+  <path d="M1220 455C1040 430 900 340 760 210" fill="none" stroke="#8d5b5f" stroke-width="15" stroke-linecap="round" opacity=".2"/>
+  <g opacity=".8">
+    <circle cx="530" cy="70" r="23" fill="url(#p)"/><circle cx="650" cy="135" r="17" fill="url(#p)"/><circle cx="760" cy="215" r="26" fill="url(#p)"/><circle cx="870" cy="315" r="20" fill="url(#p)"/><circle cx="985" cy="410" r="28" fill="url(#p)"/><circle cx="1110" cy="535" r="18" fill="url(#p)"/><circle cx="1255" cy="690" r="30" fill="url(#p)"/><circle cx="820" cy="430" r="16" fill="url(#p)"/><circle cx="940" cy="520" r="21" fill="url(#p)"/>
+  </g>
+</svg>
