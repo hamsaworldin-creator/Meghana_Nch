@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { createRoot } from 'react-dom/client';
 import gsap from 'gsap';
 import Lenis from 'lenis';
@@ -775,6 +776,66 @@ function AICreativeJourney() {
   );
 }
 
+function ProjectModal({ project, onClose }) {
+  return createPortal(
+    <div className="project-modal-backdrop" onClick={onClose}>
+      <section
+        className="project-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="project-modal-title"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <header className="project-modal-header">
+          <span className="project-modal-number">{project.number}</span>
+          <span className="project-modal-category">{project.category}</span>
+          <h2 className="project-modal-title" id="project-modal-title">{project.title}</h2>
+          <button className="modal-close-button" type="button" onClick={onClose} aria-label="Close project details">
+            <X size={20} />
+          </button>
+        </header>
+        <div
+          className="project-modal-scroll"
+          data-lenis-prevent
+          onWheel={(event) => event.stopPropagation()}
+        >
+          <div className="project-modal-body">
+            <div className="project-modal-panel">
+              <section>
+                <h4>Overview</h4>
+                <p>{project.overview}</p>
+              </section>
+              <section>
+                <h4>Purpose</h4>
+                <p>{project.purpose}</p>
+              </section>
+            </div>
+            <div className="project-modal-panel">
+              <section>
+                <h4>Impact</h4>
+                <p>{project.impact}</p>
+              </section>
+              <section>
+                <h4>Technologies</h4>
+                <div className="project-modal-technologies">
+                  {project.technologies.map((technology) => (
+                    <span className="tech-pill" key={technology}>{technology}</span>
+                  ))}
+                </div>
+              </section>
+              <section className="project-key-features">
+                <h4>Key Features</h4>
+                <ul>{project.features.map((feature) => <li key={feature}>{feature}</li>)}</ul>
+              </section>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>,
+    document.body,
+  );
+}
+
 function Projects() {
   const [selectedProject, setSelectedProject] = useState(null);
   const lastProjectButtonRef = useRef(null);
@@ -849,50 +910,7 @@ function Projects() {
           );
         })}
       </div>
-      {selectedProject && (
-        <div className="project-modal-backdrop" onClick={() => setSelectedProject(null)}>
-          <div
-            className="project-modal glass-panel"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="project-modal-title"
-            onClick={(event) => event.stopPropagation()}
-          >
-            <button className="modal-close-button" type="button" onClick={() => setSelectedProject(null)} aria-label="Close project details">
-              <X size={20} />
-            </button>
-            <header className="project-modal-header">
-              <span className="project-modal-number">{selectedProject.number}</span>
-              <small className="project-modal-category">{selectedProject.category}</small>
-              <h3 className="project-modal-title" id="project-modal-title">{selectedProject.title}</h3>
-            </header>
-            <div
-              className="project-modal-scroll"
-              data-lenis-prevent
-              onWheel={(event) => event.stopPropagation()}
-            >
-              <div className="project-modal-body">
-                <div className="modal-section glass-panel-soft">
-                  <h4>Overview</h4>
-                  <p>{selectedProject.overview}</p>
-                  <h4>Purpose</h4>
-                  <p>{selectedProject.purpose}</p>
-                </div>
-                <div className="modal-section glass-panel-soft">
-                  <h4>Impact</h4>
-                  <p>{selectedProject.impact}</p>
-                  <h4>Technologies</h4>
-                  <div className="mini-tags">{selectedProject.technologies.map((tech) => <span className="tech-pill" key={tech}>{tech}</span>)}</div>
-                  <div className="project-key-features">
-                    <h4>Key Features</h4>
-                    <ul>{selectedProject.features.map((feature) => <li key={feature}>{feature}</li>)}</ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      {selectedProject && <ProjectModal project={selectedProject} onClose={() => setSelectedProject(null)} />}
     </section>
   );
 }
