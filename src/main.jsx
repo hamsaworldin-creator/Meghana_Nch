@@ -58,7 +58,7 @@ const journeyItems = [
   {
     stage: 'Intermediate',
     score: 'Intermediate Score: 69.9/100',
-    text: 'This period strengthened her interest in technology and became the foundation for her engineering journey.',
+    text: 'This period strengthened my interest in technology and became the foundation for my engineering journey.',
   },
   {
     stage: 'B.Tech',
