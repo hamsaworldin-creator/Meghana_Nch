@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import gsap from 'gsap';
 import Lenis from 'lenis';
@@ -26,6 +26,7 @@ import {
   X,
 } from 'lucide-react';
 import './styles.css';
+import { assetPath } from './utils/assetPath';
 
 const navItems = ['About', 'Journey', 'Projects', 'Research', 'Teaching', 'Experience', 'Achievements', 'Contact'];
 
@@ -397,6 +398,7 @@ function SectionBackgroundVideo({ src, poster, className = '', objectPosition = 
     <div className={`section-video-background ${className}`} aria-hidden="true">
       <video
         ref={videoRef}
+        aria-hidden="true"
         autoPlay
         muted
         loop
@@ -405,13 +407,13 @@ function SectionBackgroundVideo({ src, poster, className = '', objectPosition = 
         poster={poster}
         tabIndex={-1}
         style={{ objectPosition }}
+        onCanPlay={(event) => {
+          event.currentTarget.play().catch(() => undefined);
+        }}
         onError={(event) => {
-          const video = event.currentTarget;
-          console.error('Background video failed:', {
-            src: video.currentSrc,
-            error: video.error,
-            networkState: video.networkState,
-            readyState: video.readyState,
+          console.error('Background video failed', {
+            source: event.currentTarget.currentSrc,
+            error: event.currentTarget.error,
           });
         }}
       >
@@ -498,9 +500,15 @@ function Hero() {
     video.defaultMuted = true;
     video.playsInline = true;
 
-    video.play().catch((error) => {
-      console.error('Hero autoplay failed:', error);
-    });
+    const attemptPlay = async () => {
+      try {
+        await video.play();
+      } catch (error) {
+        console.warn('Hero video autoplay was blocked:', error);
+      }
+    };
+
+    attemptPlay();
   }, []);
 
   return (
@@ -576,21 +584,14 @@ function Hero() {
               }}
               onError={(event) => {
                 console.error('Hero video failed to load', {
-                  src: event.currentTarget.currentSrc,
+                  source: event.currentTarget.currentSrc,
                   error: event.currentTarget.error,
+                  networkState: event.currentTarget.networkState,
+                  readyState: event.currentTarget.readyState,
                 });
               }}
             >
-             
-<video
-  src={`${import.meta.env.BASE_URL}video2.mp4`}
-  controls
-  autoPlay
-  muted
-  playsInline
-/>
-
-              {/* <source src="/video2.mp4" type="video/mp4" /> */}
+              <source src={assetPath('video2.mp4')} type="video/mp4" />
             </video>
             <span className="hero-frame-shine" aria-hidden="true" />
           </div>
@@ -624,7 +625,7 @@ function SectionHeading({ icon: Icon = Sparkles, title, kicker }) {
 function About() {
   return (
     <section className="about-section screen-section about-story-section" id="about">
-      <SectionBackgroundVideo src="/about-cherry-background.mp4" className="about-video-bg" objectPosition="center center" />
+      <SectionBackgroundVideo src={assetPath('about-cherry-background.mp4')} className="about-video-bg" objectPosition="center center" />
       <div className="about-content section-content section-inner">
         <SectionHeading icon={Sparkles} title="The Story Behind Meghana" />
         <div className="about-intro content-glass">
@@ -758,7 +759,7 @@ function Experience() {
 function AICreativeJourney() {
   return (
     <section id="ai-journey" className="ai-journey-section screen-section">
-      <SectionBackgroundVideo src="/researchai.mp4" className="ai-journey-video-bg" objectPosition="center center" />
+      <SectionBackgroundVideo src={assetPath('researchai.mp4')} className="ai-journey-video-bg" objectPosition="center center" />
       <div className="ai-journey-content section-content section-inner">
         <SectionHeading icon={WandSparkles} title="Three Years of Creating with AI" />
         <div className="letter-panel wide content-glass">
@@ -899,7 +900,7 @@ function Projects() {
 function Research() {
   return (
     <section className="research-section screen-section" id="research">
-      <SectionBackgroundVideo src={`${import.meta.env.BASE_URL}research.mp4`} className="research-video-bg" objectPosition="center center" />
+      <SectionBackgroundVideo src={assetPath('research.mp4')} className="research-video-bg" objectPosition="center center" />
       <div className="research-content section-content section-inner">
         <SectionHeading icon={Microscope} title="Research Beyond Boundaries" />
         <div className="research-layout">
@@ -1000,7 +1001,7 @@ function Achievements() {
 function Contact() {
   return (
     <section className="contact-section screen-section" id="contact">
-      <SectionBackgroundVideo src="/contact.mp4" className="contact-video-bg" objectPosition="center center" />
+      <SectionBackgroundVideo src={assetPath('contact.mp4')} className="contact-video-bg" objectPosition="center center" />
       <div className="contact-content section-content section-inner">
         <SectionHeading icon={Mail} title="Let's Create, Learn and Build Together" />
         <div className="contact-panel content-glass">
@@ -1020,36 +1021,28 @@ function Contact() {
 function BackgroundMusic() {
   const audioRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [hasInteracted, setHasInteracted] = useState(false);
   const [isAvailable, setIsAvailable] = useState(true);
 
-  const startMusic = async () => {
+  const playMusic = useCallback(async () => {
     const audio = audioRef.current;
     if (!audio || !isAvailable) return;
 
+    audio.volume = 0.2;
+
     try {
-      audio.volume = 0.22;
       await audio.play();
       setIsPlaying(true);
-      setHasInteracted(true);
     } catch (error) {
-      console.warn('Background music autoplay was blocked.', error);
+      console.warn('Background music autoplay was blocked:', error);
     }
-  };
+  }, [isAvailable]);
 
   const toggleMusic = async () => {
     const audio = audioRef.current;
     if (!audio || !isAvailable) return;
 
     if (audio.paused) {
-      try {
-        audio.volume = 0.22;
-        await audio.play();
-        setIsPlaying(true);
-        setHasInteracted(true);
-      } catch (error) {
-        console.warn('Background music could not start.', error);
-      }
+      await playMusic();
     } else {
       audio.pause();
       setIsPlaying(false);
@@ -1057,14 +1050,10 @@ function BackgroundMusic() {
   };
 
   useEffect(() => {
-    startMusic();
-  }, []);
-
-  useEffect(() => {
-    if (hasInteracted || isPlaying || !isAvailable) return undefined;
+    playMusic();
 
     const unlockAudio = () => {
-      startMusic();
+      playMusic();
     };
 
     window.addEventListener('pointerdown', unlockAudio, { once: true });
@@ -1074,13 +1063,13 @@ function BackgroundMusic() {
       window.removeEventListener('pointerdown', unlockAudio);
       window.removeEventListener('keydown', unlockAudio);
     };
-  }, [hasInteracted, isAvailable, isPlaying]);
+  }, [playMusic]);
 
   return (
     <>
       <audio
         ref={audioRef}
-        src="/audio/portfolio-theme.mp3"
+        src={assetPath('audio/portfolio-theme.mp3')}
         loop
         preload="auto"
         onError={() => {
