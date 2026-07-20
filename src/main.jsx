@@ -28,6 +28,7 @@ import {
 } from 'lucide-react';
 import './styles.css';
 import { assetPath } from './utils/assetPath';
+import { VisitorCounter } from './components/VisitorCounter';
 
 const navItems = ['About', 'Journey', 'Projects', 'Research', 'Teaching', 'Experience', 'Achievements', 'Contact'];
 
@@ -313,17 +314,22 @@ function CherryBlossomRain() {
   );
 }
 
+function seededValue(seed) {
+  const value = Math.sin(seed * 999) * 10000;
+  return value - Math.floor(value);
+}
+
 function FloatingParticles({ count = 42, className = '' }) {
   const particles = useMemo(
     () =>
       Array.from({ length: count }, (_, index) => ({
         id: index,
-        x: `${Math.random() * 100}%`,
-        y: `${Math.random() * 100}%`,
-        size: `${Math.random() * 4 + 2}px`,
-        delay: `${Math.random() * -12}s`,
-        duration: `${Math.random() * 8 + 8}s`,
-        opacity: Math.random() * 0.35 + 0.16,
+        x: `${seededValue(index + 1) * 100}%`,
+        y: `${seededValue(index + 101) * 100}%`,
+        size: `${seededValue(index + 201) * 4 + 2}px`,
+        delay: `${seededValue(index + 301) * -12}s`,
+        duration: `${seededValue(index + 401) * 8 + 8}s`,
+        opacity: seededValue(index + 501) * 0.35 + 0.16,
       })),
     [count],
   );
@@ -1109,47 +1115,6 @@ function BackgroundMusic() {
   );
 }
 
-function VisitorCounter() {
-  const [count, setCount] = useState(null);
-  const [available, setAvailable] = useState(true);
-
-  useEffect(() => {
-    const countedKey = 'meghana-portfolio-visit-counted';
-    const counted = sessionStorage.getItem(countedKey) === 'true';
-    fetch('/api/visitors', {
-      method: counted ? 'GET' : 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: counted ? undefined : JSON.stringify({ page: '/' }),
-    })
-      .then((response) => {
-        if (!response.ok) throw new Error('visitor service unavailable');
-        return response.json();
-      })
-      .then((data) => {
-        if (typeof data.count !== 'number') throw new Error('invalid visitor count');
-        sessionStorage.setItem(countedKey, 'true');
-        const counter = { value: 0 };
-        gsap.to(counter, {
-          value: data.count,
-          duration: 1.2,
-          ease: 'power2.out',
-          onUpdate() {
-            setCount(Math.round(counter.value));
-          },
-        });
-      })
-      .catch(() => setAvailable(false));
-  }, []);
-
-  if (!available) return null;
-  return (
-    <footer className="visitor-counter">
-      <span>Visitors to Meghana’s World</span>
-      <strong>{count === null ? '----' : String(count).padStart(4, '0')}</strong>
-    </footer>
-  );
-}
-
 function Portfolio() {
   useEffect(() => {
     const lenis = new Lenis({ lerp: 0.08, smoothWheel: true });
@@ -1211,8 +1176,16 @@ function Portfolio() {
       <AICreativeJourney />
       <Achievements />
       <Contact />
+      <footer className="site-footer">
+        <div className="footer-content">
+          <VisitorCounter />
+
+          <p className="footer-copyright">
+            &copy; {new Date().getFullYear()} N.Ch. Sai Meghana
+          </p>
+        </div>
+      </footer>
       <BackgroundMusic />
-      <VisitorCounter />
     </main>
   );
 }

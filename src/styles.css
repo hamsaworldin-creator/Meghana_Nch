@@ -3848,3 +3848,134 @@ a:focus-visible {
     padding-inline: 1rem;
   }
 }
+
+.site-footer {
+  position: relative;
+  z-index: 2;
+  padding:
+    1.5rem
+    clamp(1.25rem, 4vw, 4rem)
+    2rem;
+}
+
+.footer-content {
+  width: min(1280px, 100%);
+  margin-inline: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.visitor-counter {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.85rem;
+  min-width: 250px;
+  padding: 0.85rem 1.15rem;
+  color: #613f55;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.58),
+      rgba(255, 255, 255, 0.28)
+    );
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 22px;
+  backdrop-filter: blur(22px) saturate(1.2);
+  -webkit-backdrop-filter: blur(22px) saturate(1.2);
+  box-shadow:
+    0 16px 42px rgba(88, 60, 84, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.82);
+}
+
+.visitor-counter-icon {
+  flex: 0 0 auto;
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 15px;
+  color: #a64f7d;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(250, 208, 232, 0.72),
+      rgba(221, 216, 248, 0.62)
+    );
+  border: 1px solid rgba(255, 255, 255, 0.76);
+}
+
+.visitor-counter-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.visitor-counter-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.visitor-counter-label {
+  color: rgba(97, 63, 85, 0.72);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1.25;
+  text-transform: uppercase;
+}
+
+.visitor-counter-value,
+.visitor-counter strong.visitor-counter-value {
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  color: #4c3041;
+  background: transparent;
+  font-family: var(--serif-font, var(--serif));
+  font-size: 1.55rem;
+  line-height: 1;
+  letter-spacing: 0;
+  text-align: left;
+  animation: visitorCountIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.footer-copyright {
+  margin: 0;
+  color: rgba(76, 48, 65, 0.68);
+  font-size: 0.88rem;
+}
+
+@keyframes visitorCountIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 700px) {
+  .footer-content {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .visitor-counter {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .footer-copyright {
+    text-align: center;
+  }
+}
