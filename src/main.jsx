@@ -1001,7 +1001,7 @@ function Achievements() {
 function Contact() {
   return (
     <section className="contact-section screen-section" id="contact">
-      <SectionBackgroundVideo src={assetPath('contact.mp4')} className="contact-video-bg" objectPosition="center center" />
+      <SectionBackgroundVideo src={assetPath('contact.gif')} className="contact-video-bg" objectPosition="center center" />
       <div className="contact-content section-content section-inner">
         <SectionHeading icon={Mail} title="Let's Create, Learn and Build Together" />
         <div className="contact-panel content-glass">
